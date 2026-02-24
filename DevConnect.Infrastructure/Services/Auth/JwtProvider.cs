@@ -2,10 +2,11 @@
 using DevConnect.Domain.Entities;
 using DevConnect.Infrastructure.Authentication.Jwt;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DevConnect.Infrastructure.Services.Auth;
 
@@ -42,5 +43,11 @@ public class JwtProvider : IJwtProvider
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+    public string GenerateRefreshToken()
+    {
+        var bytes = new byte[32];
+        RandomNumberGenerator.Fill(bytes);
+        return Convert.ToBase64String(bytes);
     }
 }

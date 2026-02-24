@@ -6,11 +6,11 @@ namespace DevConnect.Application.Interfaces.Auth;
 
 public interface IAuthService
 {
-    Task<Result<AuthResponse>> RegisterAsync(
-        RegisterRequest request,
-        CancellationToken ct);
-
-    Task<Result<AuthResponse>> LoginAsync(
-        LoginRequest request,
-        CancellationToken ct);
+    Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request,CancellationToken ct);
+    Task<Result<LoginResponse>> LoginAsync( LoginRequest request,CancellationToken ct);
+    Task<Result<string>> RefreshAsync(string refreshToken, CancellationToken ct);
+    Task<Result> LogoutAsync(string refreshToken, CancellationToken ct);
+    Task RequestPasswordResetAsync(string email, CancellationToken ct);
+    Task ResetPasswordAsync(string email, string code, string newPassword, CancellationToken ct);
+    Task<Result> VerifyRegisterAsync(string email, string code, CancellationToken ct);
 }

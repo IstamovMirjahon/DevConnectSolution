@@ -4,21 +4,21 @@ namespace DevConnect.Domain.Entities;
 
 public class User : BaseEntity
 {
-    public string FullName { get; private set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
 
-    public string Email { get; private set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 
-    public string PasswordHash { get; private set; } = string.Empty;
+    public string PasswordHash { get; set; } = string.Empty;
 
-    public string? ImageUrl { get; private set; }
+    public string? ImageUrl { get; set; }
 
-    public string? PortfolioUrl { get; private set; }
+    public string? PortfolioUrl { get; set; }
 
-    public Role Role { get; private set; }
+    public Role Role { get; set; }
 
-    public Profession Profession { get; private set; }
+    public Profession Profession { get; set; }
 
-    public UserType Type { get; private set; } = UserType.Unconfirmed;
+    public UserType Type { get; set; } = UserType.Unconfirmed;
 
     private User() { } // EF
 
