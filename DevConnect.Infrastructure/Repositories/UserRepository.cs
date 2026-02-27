@@ -29,6 +29,12 @@ public class UserRepository(DefaultContext context) : IUserRepository
         return await context.Set<User>()
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
+    
+    public void Update(User user)
+    {
+        context.Set<User>().Update(user);
+    }
+
     public async Task SaveChangesAsync(CancellationToken ct)
     {
         await context.SaveChangesAsync(ct);

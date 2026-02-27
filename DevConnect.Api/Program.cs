@@ -1,4 +1,5 @@
 using DevConnect.Api.Configurations;
+using DevConnect.Application.ResponseSerializer;
 using DevConnect.Api.Configurations.Jwt;
 using DevConnect.Application.DI;
 using DevConnect.Infrastructure.Options;
@@ -26,6 +27,7 @@ builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<DevConnectResponseSerializer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

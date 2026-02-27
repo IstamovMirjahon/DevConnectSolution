@@ -7,6 +7,7 @@ public class DefaultContext(DbContextOptions<DefaultContext> options) : DbContex
 {
     public DbSet<User> Users { get; set; }
     public DbSet<UserToken> UserTokens { get; set; }
+    public DbSet<Recruiter> Recruiters { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DefaultContext).Assembly);

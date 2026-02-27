@@ -1,4 +1,5 @@
 ﻿using DevConnect.Application.Interfaces.Auth;
+using DevConnect.Application.ResponseSerializer;
 using DevConnect.Application.Models.Auth.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
@@ -9,17 +10,13 @@ namespace DevConnect.Api.Controllers.Auth;
 [ApiController]
 [Route("api/auth")]
 [AllowAnonymous]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService, DevConnectResponseSerializer serializer) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(Application.Models.Auth.Requests.RegisterRequest request, CancellationToken ct)
     {
         var result = await authService.RegisterAsync(request, ct);
-
-        if (result.IsFailed)
-            return BadRequest(result.Error);
-
-        return Ok(new { data = result.Value });
+        return serializer.ToActionResult(result);
     }
     [HttpPost("verify-register")]
     public async Task<IActionResult> VerifyRegister(string email, string code, CancellationToken ct)
@@ -27,20 +24,13 @@ public class AuthController(IAuthService authService) : ControllerBase
         var result = await authService
             .VerifyRegisterAsync(email, code, ct);
 
-        if (result.IsFailed)
-            return BadRequest(result.Error);
-
-        return Ok("Registration completed successfully");
+        return serializer.ToActionResult(result);
     }
     [HttpPost("login")]
     public async Task<IActionResult> Login(Application.Models.Auth.Requests.LoginRequest request, CancellationToken ct)
     {
         var result = await authService.LoginAsync(request, ct);
-
-        if (result.IsFailed)
-            return BadRequest(result.Error);
-
-        return Ok(new { data = result.Value });
+        return serializer.ToActionResult(result);
     }
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(string refreshToken, CancellationToken ct)
@@ -48,10 +38,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         var newAccessToken =
             await authService.RefreshAsync(refreshToken, ct);
 
-        return Ok(new
-        {
-            accessToken = newAccessToken
-        });
+        return serializer.ToActionResult(new { accessToken = newAccessToken });
     }
 
     [HttpPost("logout")]
@@ -59,7 +46,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         await authService.LogoutAsync(refreshToken, ct);
 
-        return Ok();
+        return serializer.ToActionResult(null);
     }
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(string email, CancellationToken ct)
@@ -67,7 +54,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         await authService
             .RequestPasswordResetAsync(email, ct);
 
-        return Ok("Reset code sent to email");
+        return serializer.ToActionResult("Reset code sent to email");
     }
 
     [HttpPost("reset-password")]
@@ -79,6 +66,6 @@ public class AuthController(IAuthService authService) : ControllerBase
             request.NewPassword,
             ct);
 
-        return Ok("Password successfully reset");
+        return serializer.ToActionResult("Password successfully reset");
     }
 }

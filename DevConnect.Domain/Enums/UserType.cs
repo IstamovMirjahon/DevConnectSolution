@@ -3,5 +3,6 @@
 public enum UserType
 {
     Confirmed,
-    Unconfirmed
+    Unconfirmed,
+    Blocked
 }

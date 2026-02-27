@@ -20,6 +20,8 @@ public class User : BaseEntity
 
     public UserType Type { get; set; } = UserType.Unconfirmed;
 
+    public virtual Recruiter? Recruiter { get; set; }
+
     private User() { } // EF
 
     public User(

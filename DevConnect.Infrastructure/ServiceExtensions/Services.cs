@@ -19,6 +19,7 @@ public static class Services
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IRecruiterRepository, RecruiterRepository>();
 
         return services;
     }
