@@ -20,13 +20,17 @@ public class AuthService(
 {
     public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request, CancellationToken ct)
     {
+        if (!new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(request.Email))
+            return Result.Fail<AuthResponse>(
+                new UserError(ErrorCodes.InvalidEmailFormat, ErrorMessages.InvalidEmailFormat));
+
         if (request.Password != request.ConfirmPassword)
             return Result.Fail<AuthResponse>(
-                new Error("PASSWORD_MISMATCH", "Passwords do not match"));
+                new UserError(ErrorCodes.PasswordMismatch, ErrorMessages.PasswordMismatch));
 
         if (await userRepository.ExistsByEmailAsync(request.Email, ct))
             return Result.Fail<AuthResponse>(
-                new Error("EMAIL_EXISTS", "Email already registered"));
+                new UserError(ErrorCodes.EmailExists, ErrorMessages.EmailExists));
 
         var passwordHash = passwordHasher.Hash(request.Password);
 
@@ -55,15 +59,15 @@ public class AuthService(
 
         if (user is null)
             return Result.Fail<LoginResponse>(
-                new Error("INVALID_CREDENTIALS", "Email or password wrong"));
+                new UserError(ErrorCodes.InvalidCredentials, ErrorMessages.InvalidCredentials));
 
         if (!passwordHasher.Verify(request.Password, user.PasswordHash))
             return Result.Fail<LoginResponse>(
-                new Error("INVALID_CREDENTIALS", "Email or password wrong"));
+                new UserError(ErrorCodes.InvalidCredentials, ErrorMessages.InvalidCredentials));
 
         if (user.State != State.Active)
             return Result.Fail<LoginResponse>(
-                new Error("USER_INACTIVE", "User is not active"));
+                new UserError(ErrorCodes.UserInactive, ErrorMessages.UserInactive));
 
         var accessToken = jwtProvider.Generate(user);
         var refreshToken = jwtProvider.GenerateRefreshToken();
@@ -106,16 +110,16 @@ public class AuthService(
             .GetByRefreshTokenAsync(refreshToken, ct);
 
         if (token == null)
-            throw new UnauthorizedAccessException("Invalid refresh token");
+            return Result<string>.Fail(new UserError(ErrorCodes.InvalidRefreshToken, ErrorMessages.InvalidRefreshToken));
 
         if (token.RefreshTokenExpiration < DateTime.UtcNow)
-            throw new UnauthorizedAccessException("Refresh token expired");
+            return Result<string>.Fail(new UserError(ErrorCodes.RefreshTokenExpired, ErrorMessages.RefreshTokenExpired));
 
         var user = await userRepository
             .GetByIdAsync(token.UserId, ct);
 
         if (user == null)
-            throw new UnauthorizedAccessException("User not found");
+            return Result<string>.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
 
         var newAccessToken = jwtProvider.Generate(user);
 
@@ -132,7 +136,7 @@ public class AuthService(
             .GetByRefreshTokenAsync(refreshToken, ct);
 
         if (token == null)
-            return Result.Fail(new Error("INVALID_REFRESH_TOKEN", "Invalid refresh token"));
+            return Result.Fail(new UserError(ErrorCodes.InvalidRefreshToken, ErrorMessages.InvalidRefreshToken));
 
         token.RefreshToken = string.Empty;
         token.RefreshTokenExpiration = DateTime.UtcNow;
@@ -140,30 +144,32 @@ public class AuthService(
         await _userTokenRepository.SaveChangesAsync(ct);
         return Result.Success();
     }
-    public async Task RequestPasswordResetAsync(string email, CancellationToken ct)
+    public async Task<Result> RequestPasswordResetAsync(string email, CancellationToken ct)
     {
         var user = await userRepository.GetByEmailAsync(email, ct);
 
         if (user == null)
-            throw new Exception("User not found");
+            return Result.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
 
         await _emailService.SendResetPasswordCodeAsync(email);
+        return Result.Success();
     }
-    public async Task ResetPasswordAsync(string email, string code, string newPassword, CancellationToken ct)
+    public async Task<Result> ResetPasswordAsync(string email, string code, string newPassword, CancellationToken ct)
     {
         var isValid = _emailService.VerifyResetPasswordCode(email, code);
 
         if (!isValid)
-            throw new Exception("Invalid or expired code");
+            return Result.Fail(new UserError(ErrorCodes.InvalidCode, ErrorMessages.InvalidCode));
 
         var user = await userRepository.GetByEmailAsync(email, ct);
 
         if (user == null)
-            throw new Exception("User not found");
+            return Result.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
 
         user.PasswordHash = passwordHasher.Hash(newPassword);
 
         await userRepository.SaveChangesAsync(ct);
+        return Result.Success();
     }
     public async Task<Result> VerifyRegisterAsync(string email, string code, CancellationToken ct)
     {
@@ -171,14 +177,14 @@ public class AuthService(
 
         if (!isValid)
             return Result.Fail(
-                new Error("INVALID_CODE", "Invalid or expired code"));
+                new UserError(ErrorCodes.InvalidCode, ErrorMessages.InvalidCode));
 
         if (!_memoryCache.TryGetValue(
             $"register_{email}",
             out PendingRegisterModel? pendingUser))
         {
             return Result.Fail(
-                new Error("REGISTER_EXPIRED", "Registration expired"));
+                new UserError(ErrorCodes.RegisterExpired, ErrorMessages.RegisterExpired));
         }
 
         var user = new User(

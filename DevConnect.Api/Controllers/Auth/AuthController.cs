@@ -4,6 +4,7 @@ using DevConnect.Application.Models.Auth.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using DevConnect.Domain.Helpers;
 
 namespace DevConnect.Api.Controllers.Auth;
 
@@ -35,10 +36,12 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(string refreshToken, CancellationToken ct)
     {
-        var newAccessToken =
-            await authService.RefreshAsync(refreshToken, ct);
+        var result = await authService.RefreshAsync(refreshToken, ct);
 
-        return serializer.ToActionResult(new { accessToken = newAccessToken });
+        if (result.IsSuccess)
+            return serializer.ToActionResult(Result.Success(new { accessToken = result.Value }));
+
+        return serializer.ToActionResult(result);
     }
 
     [HttpPost("logout")]
@@ -51,21 +54,26 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(string email, CancellationToken ct)
     {
-        await authService
-            .RequestPasswordResetAsync(email, ct);
+        var result = await authService.RequestPasswordResetAsync(email, ct);
 
-        return serializer.ToActionResult("Reset code sent to email");
+        if (result.IsSuccess)
+            return serializer.ToActionResult(Result.Success("Reset code sent to email"));
+
+        return serializer.ToActionResult(result);
     }
 
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(Application.Models.Auth.Requests.ResetPasswordRequest request, CancellationToken ct)
     {
-        await authService.ResetPasswordAsync(
+        var result = await authService.ResetPasswordAsync(
             request.Email,
             request.Code,
             request.NewPassword,
             ct);
 
-        return serializer.ToActionResult("Password successfully reset");
+        if (result.IsSuccess)
+            return serializer.ToActionResult(Result.Success("Password successfully reset"));
+
+        return serializer.ToActionResult(result);
     }
 }

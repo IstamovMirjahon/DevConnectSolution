@@ -12,11 +12,11 @@ public class RecruiterService(IRecruiterRepository recruiterRepository, IUserRep
     {
         var existing = await recruiterRepository.ExistsByUserIdAsync(request.UserId, ct);
         if (existing)
-            return Result<RecruiterResponse>.Fail(new Error("Recruiter profile already exists for this user."));
+            return Result<RecruiterResponse>.Fail(new UserError(ErrorCodes.RecruiterExists, ErrorMessages.RecruiterExists));
 
         var user = await userRepository.GetByIdAsync(request.UserId, ct);
         if (user == null)
-            return Result<RecruiterResponse>.Fail(new Error("User not found"));
+            return Result<RecruiterResponse>.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
 
         var recruiter = new Recruiter
         {
@@ -50,7 +50,7 @@ public class RecruiterService(IRecruiterRepository recruiterRepository, IUserRep
     {
         var recruiter = await recruiterRepository.GetByUserIdAsync(userId, ct);
         if (recruiter == null)
-            return Result<RecruiterResponse>.Fail(new Error("Recruiter profile not found."));
+            return Result<RecruiterResponse>.Fail(new NotFoundError(ErrorCodes.RecruiterNotFound, ErrorMessages.RecruiterNotFound));
 
         var response = new RecruiterResponse
         {

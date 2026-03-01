@@ -12,7 +12,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
         var user = await userRepository.GetByIdAsync(userId, ct);
         if (user is null)
         {
-            return Result<UserProfileResponse>.Fail(new NotFoundError(CommonErrorCodes.ValueDoesNotExist, "User not found"));
+            return Result<UserProfileResponse>.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
         }
 
         var response = new UserProfileResponse
@@ -36,12 +36,12 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
         var user = await userRepository.GetByIdAsync(userId, ct);
         if (user is null)
         {
-            return Result.Fail(new NotFoundError(CommonErrorCodes.ValueDoesNotExist, "User not found"));
+            return Result.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
         }
 
         if (!passwordHasher.Verify(request.CurrentPassword, user.PasswordHash))
         {
-            return Result.Fail(new UserError(CommonErrorCodes.BadInput, "Incorrect current password"));
+            return Result.Fail(new UserError(ErrorCodes.PasswordMismatch, ErrorMessages.IncorrectCurrentPassword));
         }
 
         var newHash = passwordHasher.Hash(request.NewPassword);
