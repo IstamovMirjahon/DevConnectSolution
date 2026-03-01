@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: devconnect_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mirjahon2077
+      POSTGRES_DB: dev_connect
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devconnect_api
+    depends_on:
+      - db
+    ports:
+      - "5050:8080" # Maps port 8080 inside container to 5050 on host machine
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Notice we are using 'db' instead of 'localhost' so it connects to the PostgreSQL container
+      - ConnectionStrings__DefaultConnetion=Host=db;Port=5432;Database=dev_connect;Username=postgres;Password=mirjahon2077
+    restart: always
+
+volumes:
+  pgdata:
