@@ -16,7 +16,7 @@ public class User : BaseEntity
 
     public Role Role { get; set; }
 
-    public Profession Profession { get; set; }
+    public Profession? Profession { get; set; }
 
     public UserType Type { get; set; } = UserType.Unconfirmed;
 
@@ -28,14 +28,12 @@ public class User : BaseEntity
         string fullName,
         string email,
         string passwordHash,
-        Role role,
-        Profession profession)
+        Role role)
     {
         FullName = fullName;
         Email = email.ToLower();
         PasswordHash = passwordHash;
         Role = role;
-        Profession = profession;
         State = State.Active;
         Type = UserType.Unconfirmed;
     }

@@ -24,10 +24,6 @@ public class AuthService(
             return Result.Fail<AuthResponse>(
                 new UserError(ErrorCodes.InvalidEmailFormat, ErrorMessages.InvalidEmailFormat));
 
-        if (request.Password != request.ConfirmPassword)
-            return Result.Fail<AuthResponse>(
-                new UserError(ErrorCodes.PasswordMismatch, ErrorMessages.PasswordMismatch));
-
         if (await userRepository.ExistsByEmailAsync(request.Email, ct))
             return Result.Fail<AuthResponse>(
                 new UserError(ErrorCodes.EmailExists, ErrorMessages.EmailExists));
@@ -39,8 +35,7 @@ public class AuthService(
             FullName = request.FullName,
             Email = request.Email.ToLower(),
             PasswordHash = passwordHash,
-            Role = request.Role,
-            Profession = request.Profession
+            Role = request.Role
         };
 
         _memoryCache.Set(
@@ -191,8 +186,7 @@ public class AuthService(
             pendingUser.FullName,
             pendingUser.Email,
             pendingUser.PasswordHash,
-            pendingUser.Role,
-            pendingUser.Profession
+            pendingUser.Role
         );
 
         await userRepository.AddAsync(user, ct);

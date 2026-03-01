@@ -6,7 +6,5 @@ public record RegisterRequest(
     string FullName,
     string Email,
     string Password,
-    string ConfirmPassword,
-    Role Role,
-    Profession Profession
+    Role Role
 );
