@@ -16,6 +16,7 @@ public class AuthService(
     IJwtProvider jwtProvider,
     IEmailService _emailService,
     IUserTokenRepository _userTokenRepository,
+    IUnitOfWork unitOfWork,
     IMemoryCache _memoryCache) : IAuthService
 {
     public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request, CancellationToken ct)
@@ -85,7 +86,7 @@ public class AuthService(
         userToken.AccessTokenExpiration = DateTime.UtcNow.AddMinutes(120);
         userToken.RefreshTokenExpiration = DateTime.UtcNow.AddDays(7);
 
-        await _userTokenRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         var response = new LoginResponse
         {
@@ -121,7 +122,7 @@ public class AuthService(
         token.AccessToken = newAccessToken;
         token.AccessTokenExpiration = DateTime.UtcNow.AddMinutes(120);
 
-        await _userTokenRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success(newAccessToken);
     }
@@ -136,7 +137,7 @@ public class AuthService(
         token.RefreshToken = string.Empty;
         token.RefreshTokenExpiration = DateTime.UtcNow;
 
-        await _userTokenRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
         return Result.Success();
     }
     public async Task<Result> RequestPasswordResetAsync(string email, CancellationToken ct)
@@ -163,7 +164,7 @@ public class AuthService(
 
         user.PasswordHash = passwordHasher.Hash(newPassword);
 
-        await userRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
         return Result.Success();
     }
     public async Task<Result> VerifyRegisterAsync(string email, string code, CancellationToken ct)
@@ -190,7 +191,7 @@ public class AuthService(
         );
 
         await userRepository.AddAsync(user, ct);
-        await userRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         _memoryCache.Remove($"register_{email}");
 

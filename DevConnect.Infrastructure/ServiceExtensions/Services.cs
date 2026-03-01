@@ -20,6 +20,9 @@ public static class Services
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IRecruiterRepository, RecruiterRepository>();
+        
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

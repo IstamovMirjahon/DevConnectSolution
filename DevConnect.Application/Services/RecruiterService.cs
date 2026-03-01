@@ -6,7 +6,7 @@ using DevConnect.Domain.IRepositories;
 
 namespace DevConnect.Application.Services;
 
-public class RecruiterService(IRecruiterRepository recruiterRepository, IUserRepository userRepository) : IRecruiterService
+public class RecruiterService(IRecruiterRepository recruiterRepository, IUserRepository userRepository, IUnitOfWork unitOfWork) : IRecruiterService
 {
     public async Task<Result<RecruiterResponse>> CreateRecruiterAsync(CreateRecruiterRequest request, CancellationToken ct = default)
     {
@@ -29,7 +29,7 @@ public class RecruiterService(IRecruiterRepository recruiterRepository, IUserRep
         };
 
         await recruiterRepository.AddAsync(recruiter, ct);
-        await recruiterRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         var response = new RecruiterResponse
         {

@@ -1,0 +1,38 @@
+﻿  Determining projects to restore...
+  Restored D:\Diplom ishi\DevConnectSolution\DevConnect.Application\DevConnect.Application.csproj (in 487 ms).
+  Restored D:\Diplom ishi\DevConnectSolution\DevConnect.Domain\DevConnect.Domain.csproj (in 473 ms).
+  Restored D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj (in 484 ms).
+  Restored D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj (in 486 ms).
+  DevConnect.Domain -> D:\Diplom ishi\DevConnectSolution\DevConnect.Domain\bin\Debug\net8.0\DevConnect.Domain.dll
+D:\Diplom ishi\DevConnectSolution\DevConnect.Application\Services\AuthService.cs(187,13): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Application\DevConnect.Application.csproj]
+  DevConnect.Application -> D:\Diplom ishi\DevConnectSolution\DevConnect.Application\bin\Debug\net8.0\DevConnect.Application.dll
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Migrations\20260224123205_firstmigration.cs(9,26): warning CS8981: The type name 'firstmigration' only contains lower-cased ascii characters. Such names may become reserved for the language. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Migrations\20260224123205_firstmigration.Designer.cs(16,19): warning CS8981: The type name 'firstmigration' only contains lower-cased ascii characters. Such names may become reserved for the language. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Helpers\HttpContextHelper.cs(9,42): warning CS8603: Possible null reference return. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Services\Auth\JwtProvider.cs(29,37): warning CS8604: Possible null reference argument for parameter 'value' in 'Claim.Claim(string type, string value)'. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Configurations\RecruiterConfiguration.cs(49,9): warning CS0618: 'RelationalEntityTypeBuilderExtensions.HasCheckConstraint<TEntity>(EntityTypeBuilder<TEntity>, string, string?)' is obsolete: 'Configure this using ToTable(t => t.HasCheckConstraint()) instead.' [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Configurations\RecruiterConfiguration.cs(50,9): warning CS0618: 'RelationalEntityTypeBuilderExtensions.HasCheckConstraint<TEntity>(EntityTypeBuilder<TEntity>, string, string?)' is obsolete: 'Configure this using ToTable(t => t.HasCheckConstraint()) instead.' [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+  DevConnect.Infrastructure -> D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\bin\Debug\net8.0\DevConnect.Infrastructure.dll
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Controllers\Auth\AuthController.cs(52,42): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Configurations\PresentationConfiguration.cs(29,33): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Configurations\PresentationConfiguration.cs(33,25): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+  DevConnect.Api -> D:\Diplom ishi\DevConnectSolution\DevConnect.Api\bin\Debug\net8.0\DevConnect.Api.dll
+
+Build succeeded.
+
+D:\Diplom ishi\DevConnectSolution\DevConnect.Application\Services\AuthService.cs(187,13): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Application\DevConnect.Application.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Migrations\20260224123205_firstmigration.cs(9,26): warning CS8981: The type name 'firstmigration' only contains lower-cased ascii characters. Such names may become reserved for the language. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Migrations\20260224123205_firstmigration.Designer.cs(16,19): warning CS8981: The type name 'firstmigration' only contains lower-cased ascii characters. Such names may become reserved for the language. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Helpers\HttpContextHelper.cs(9,42): warning CS8603: Possible null reference return. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Services\Auth\JwtProvider.cs(29,37): warning CS8604: Possible null reference argument for parameter 'value' in 'Claim.Claim(string type, string value)'. [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Configurations\RecruiterConfiguration.cs(49,9): warning CS0618: 'RelationalEntityTypeBuilderExtensions.HasCheckConstraint<TEntity>(EntityTypeBuilder<TEntity>, string, string?)' is obsolete: 'Configure this using ToTable(t => t.HasCheckConstraint()) instead.' [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\Configurations\RecruiterConfiguration.cs(50,9): warning CS0618: 'RelationalEntityTypeBuilderExtensions.HasCheckConstraint<TEntity>(EntityTypeBuilder<TEntity>, string, string?)' is obsolete: 'Configure this using ToTable(t => t.HasCheckConstraint()) instead.' [D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\DevConnect.Infrastructure.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Controllers\Auth\AuthController.cs(52,42): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Configurations\PresentationConfiguration.cs(29,33): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Configurations\PresentationConfiguration.cs(33,25): warning CS8602: Dereference of a possibly null reference. [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+    10 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:11.42
+
+Workload updates are available. Run `dotnet workload list` for more information.

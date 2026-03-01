@@ -2,12 +2,8 @@
 
 namespace DevConnect.Domain.IRepositories;
 
-public interface IUserRepository
+public interface IUserRepository : IRepository<User>
 {
     Task<User?> GetByEmailAsync(string email, CancellationToken ct);
-    Task AddAsync(User user, CancellationToken ct);
-    Task<User> GetByIdAsync(Guid id, CancellationToken ct);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken ct);
-    void Update(User user);
-    Task SaveChangesAsync(CancellationToken ct);
 }

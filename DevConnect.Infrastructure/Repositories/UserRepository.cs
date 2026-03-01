@@ -5,39 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevConnect.Infrastructure.Repositories;
 
-public class UserRepository(DefaultContext context) : IUserRepository
+public class UserRepository(DefaultContext context) : Repository<User>(context), IUserRepository
 {
-    public async Task AddAsync(User user, CancellationToken ct)
-    {
-        await context.Set<User>().AddAsync(user, ct);
-    }
-
     public async Task<User?> GetByEmailAsync(string email, CancellationToken ct)
     {
-        return await context.Set<User>()
+        return await DbSet
             .FirstOrDefaultAsync(x => x.Email == email, ct);
     }
 
     public async Task<bool> ExistsByEmailAsync(string email, CancellationToken ct)
     {
-        return await context.Set<User>()
+        return await DbSet
             .AnyAsync(x => x.Email == email, ct);
     }
-
-    public async Task<User> GetByIdAsync(Guid id, CancellationToken ct)
-    {
-        return await context.Set<User>()
-            .FirstOrDefaultAsync(x => x.Id == id, ct);
-    }
-    
-    public void Update(User user)
-    {
-        context.Set<User>().Update(user);
-    }
-
-    public async Task SaveChangesAsync(CancellationToken ct)
-    {
-        await context.SaveChangesAsync(ct);
-    }
-
 }

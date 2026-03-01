@@ -5,7 +5,7 @@ using DevConnect.Domain.IRepositories;
 
 namespace DevConnect.Application.Services;
 
-public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher) : IUserService
+public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork) : IUserService
 {
     public async Task<Result<UserProfileResponse>> GetCurrentProfileAsync(Guid userId, CancellationToken ct = default)
     {
@@ -48,7 +48,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
         user.ChangePassword(newHash);
         
         userRepository.Update(user);
-        await userRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();
     }

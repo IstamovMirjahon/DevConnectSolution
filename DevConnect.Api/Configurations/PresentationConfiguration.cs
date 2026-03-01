@@ -13,7 +13,7 @@ public static class PresentationConfiguration
             builder
                 .AllowAnyMethod()
                 .AllowCredentials()
-                .SetIsOriginAllowed(_ => true)
+                .WithOrigins("http://localhost:5173", "http://localhost:5174")
                 .AllowAnyHeader();
         }));
 
