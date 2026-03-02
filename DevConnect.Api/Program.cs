@@ -4,6 +4,8 @@ using DevConnect.Api.Configurations.Jwt;
 using DevConnect.Application.DI;
 using DevConnect.Infrastructure.Options;
 using DevConnect.Infrastructure.ServiceExtensions;
+using DevConnect.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,23 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<DevConnectResponseSerializer>();
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<DefaultContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

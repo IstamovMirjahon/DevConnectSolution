@@ -1,0 +1,18 @@
+﻿  Determining projects to restore...
+  All projects are up-to-date for restore.
+  DevConnect.Domain -> D:\Diplom ishi\DevConnectSolution\DevConnect.Domain\bin\Debug\net8.0\DevConnect.Domain.dll
+  DevConnect.Application -> D:\Diplom ishi\DevConnectSolution\DevConnect.Application\bin\Debug\net8.0\DevConnect.Application.dll
+  DevConnect.Infrastructure -> D:\Diplom ishi\DevConnectSolution\DevConnect.Infrastructure\bin\Debug\net8.0\DevConnect.Infrastructure.dll
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Program.cs(31,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Program.cs(32,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+
+Build FAILED.
+
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Program.cs(31,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+D:\Diplom ishi\DevConnectSolution\DevConnect.Api\Program.cs(32,1): error CS1529: A using clause must precede all other elements defined in the namespace except extern alias declarations [D:\Diplom ishi\DevConnectSolution\DevConnect.Api\DevConnect.Api.csproj]
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.52
+
+Workload updates are available. Run `dotnet workload list` for more information.
