@@ -28,7 +28,7 @@ public static class Services
     }
     public static IServiceCollection AddDevConnectPersistence(this IServiceCollection services, IConfiguration config)
     {
-        var cs = config.GetConnectionString("DefaultConnetion");
+        var cs = config.GetConnectionString("DefaultConnection");
         services.AddDbContext<DefaultContext>(opt => opt.UseNpgsql(cs));
 
         return services;

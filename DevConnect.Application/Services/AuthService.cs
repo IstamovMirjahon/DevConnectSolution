@@ -42,7 +42,7 @@ public class AuthService(
         _memoryCache.Set(
             $"register_{request.Email}",
             pendingUser,
-            TimeSpan.FromMinutes(2));
+            TimeSpan.FromMinutes(10));
 
         await _emailService.SendVerificationCodeAsync(request.Email);
 
@@ -194,6 +194,21 @@ public class AuthService(
         await unitOfWork.SaveChangesAsync(ct);
 
         _memoryCache.Remove($"register_{email}");
+
+        return Result.Success();
+    }
+
+    public async Task<Result> ResendVerificationCodeAsync(string email, CancellationToken ct)
+    {
+        if (!_memoryCache.TryGetValue(
+            $"register_{email}",
+            out PendingRegisterModel? _))
+        {
+            return Result.Fail(
+                new UserError(ErrorCodes.RegisterExpired, ErrorMessages.RegisterExpired));
+        }
+
+        await _emailService.SendVerificationCodeAsync(email);
 
         return Result.Success();
     }

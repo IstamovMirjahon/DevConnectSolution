@@ -2,7 +2,6 @@
 using DevConnect.Application.ResponseSerializer;
 using DevConnect.Application.Models.Auth.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using DevConnect.Domain.Helpers;
 
@@ -24,6 +23,17 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     {
         var result = await authService
             .VerifyRegisterAsync(email, code, ct);
+
+        return serializer.ToActionResult(result);
+    }
+
+    [HttpPost("resend-code")]
+    public async Task<IActionResult> ResendCode(string email, CancellationToken ct)
+    {
+        var result = await authService.ResendVerificationCodeAsync(email, ct);
+        
+        if (result.IsSuccess)
+            return serializer.ToActionResult(Result.Success("Verification code successfully resent"));
 
         return serializer.ToActionResult(result);
     }

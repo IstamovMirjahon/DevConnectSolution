@@ -24,7 +24,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       # Notice we are using 'db' instead of 'localhost' so it connects to the PostgreSQL container
-      - ConnectionStrings__DefaultConnetion=Host=db;Port=5432;Database=dev_connect;Username=postgres;Password=mirjahon2077
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=dev_connect;Username=postgres;Password=mirjahon2077
     restart: always
 
 volumes:
