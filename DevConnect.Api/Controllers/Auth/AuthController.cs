@@ -31,7 +31,7 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     public async Task<IActionResult> ResendCode(string email, CancellationToken ct)
     {
         var result = await authService.ResendVerificationCodeAsync(email, ct);
-        
+
         if (result.IsSuccess)
             return serializer.ToActionResult(Result.Success("Verification code successfully resent"));
 
@@ -73,7 +73,7 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword(Application.Models.Auth.Requests.ResetPasswordRequest request, CancellationToken ct)
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request, CancellationToken ct)
     {
         var result = await authService.ResetPasswordAsync(
             request.Email,
