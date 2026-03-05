@@ -28,9 +28,9 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     }
 
     [HttpPost("resend-code")]
-    public async Task<IActionResult> ResendCode(string email, CancellationToken ct)
+    public async Task<IActionResult> ResendCode([FromBody] ResendCodeRequest request, CancellationToken ct)
     {
-        var result = await authService.ResendVerificationCodeAsync(email, ct);
+        var result = await authService.ResendVerificationCodeAsync(request.Email, ct);
 
         if (result.IsSuccess)
             return serializer.ToActionResult(Result.Success("Verification code successfully resent"));
