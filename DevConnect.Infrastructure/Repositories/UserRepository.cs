@@ -31,4 +31,11 @@ public class UserRepository(DefaultContext context) : Repository<User>(context),
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync(ct);
     }
+
+    public async Task UpdateImageUrlAsync(Guid userId, string imageUrl, CancellationToken ct)
+    {
+        await DbSet
+            .Where(x => x.Id == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.ImageUrl, imageUrl), ct);
+    }
 }

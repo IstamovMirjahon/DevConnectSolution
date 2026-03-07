@@ -34,6 +34,7 @@ public class UserController(IUserService userService, DevConnectResponseSerializ
         var result = await userService.ChangePasswordAsync(userId, request, ct);
         return serializer.ToActionResult(result);
     }
+
     [HttpPatch("{id:guid}/type")]
     //[Authorize(Roles = "LogCheckerCompany,LogCheckerDeveloper,Admin,SystemAdmin")]
     public async Task<IActionResult> UpdateUserType(
@@ -42,6 +43,21 @@ public class UserController(IUserService userService, DevConnectResponseSerializ
         CancellationToken ct)
     {
         var result = await userService.UpdateUserTypeAsync(id, type, ct);
+        return serializer.ToActionResult(result);
+    }
+
+    [HttpPost("me/avatar")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadAvatar(IFormFile file, CancellationToken ct)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
+        if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+            return Unauthorized(new { message = "User is not authorized." });
+
+        if (file is null || file.Length == 0)
+            return BadRequest(new { message = "File is empty." });
+
+        var result = await userService.UploadAvatarAsync(userId, file, ct);
         return serializer.ToActionResult(result);
     }
 }

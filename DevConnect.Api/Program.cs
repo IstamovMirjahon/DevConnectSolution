@@ -2,10 +2,13 @@ using DevConnect.Api.Configurations;
 using DevConnect.Application.ResponseSerializer;
 using DevConnect.Api.Configurations.Jwt;
 using DevConnect.Application.DI;
+using DevConnect.Application.Interfaces;
+using DevConnect.Api.Services;
 using DevConnect.Infrastructure.Options;
 using DevConnect.Infrastructure.ServiceExtensions;
 using DevConnect.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,12 @@ builder.Services.Configure<EmailSettings>(
 
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<DevConnectResponseSerializer>();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
+});
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -57,6 +66,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors("AllowCors");
 

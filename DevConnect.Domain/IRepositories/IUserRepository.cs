@@ -8,4 +8,5 @@ public interface IUserRepository : IRepository<User>
     Task<User?> GetByEmailAsync(string email, CancellationToken ct);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken ct);
     Task<List<User>> GetByRoleAndTypeAsync(Role role, UserType? type, CancellationToken ct);
+    Task UpdateImageUrlAsync(Guid userId, string imageUrl, CancellationToken ct);
 }

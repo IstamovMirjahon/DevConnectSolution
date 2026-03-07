@@ -3,10 +3,15 @@ using DevConnect.Application.Models.Users;
 using DevConnect.Domain.Enums;
 using DevConnect.Domain.Helpers;
 using DevConnect.Domain.IRepositories;
+using Microsoft.AspNetCore.Http;
 
 namespace DevConnect.Application.Services;
 
-public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork) : IUserService
+public class UserService(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IUnitOfWork unitOfWork,
+    IFileStorageService fileStorageService) : IUserService
 {
     public async Task<Result<UserProfileResponse>> GetCurrentProfileAsync(Guid userId, CancellationToken ct = default)
     {
@@ -47,7 +52,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 
         var newHash = passwordHasher.Hash(request.NewPassword);
         user.ChangePassword(newHash);
-        
+
         userRepository.Update(user);
         await unitOfWork.SaveChangesAsync(ct);
 
@@ -69,5 +74,17 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 
         return Result.Success();
     }
-}
 
+    public async Task<Result<UploadAvatarResponse>> UploadAvatarAsync(Guid userId, IFormFile file, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(userId, ct);
+        if (user is null)
+            return Result<UploadAvatarResponse>.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
+
+        var imageUrl = await fileStorageService.SaveFileAsync(file, ct);
+
+        await userRepository.UpdateImageUrlAsync(userId, imageUrl, ct);
+
+        return Result<UploadAvatarResponse>.Success(new UploadAvatarResponse { ImageUrl = imageUrl });
+    }
+}
