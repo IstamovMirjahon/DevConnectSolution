@@ -13,7 +13,7 @@ namespace DevConnect.Api.Controllers.Auth;
 public class AuthController(IAuthService authService, DevConnectResponseSerializer serializer) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register(Application.Models.Auth.Requests.RegisterRequest request, CancellationToken ct)
+    public async Task<IActionResult> Register([FromBody] Application.Models.Auth.Requests.RegisterRequest request, CancellationToken ct)
     {
         var result = await authService.RegisterAsync(request, ct);
         return serializer.ToActionResult(result);
@@ -38,13 +38,13 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
         return serializer.ToActionResult(result);
     }
     [HttpPost("login")]
-    public async Task<IActionResult> Login(Application.Models.Auth.Requests.LoginRequest request, CancellationToken ct)
+    public async Task<IActionResult> Login([FromBody] Application.Models.Auth.Requests.LoginRequest request, CancellationToken ct)
     {
         var result = await authService.LoginAsync(request, ct);
         return serializer.ToActionResult(result);
     }
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(string refreshToken, CancellationToken ct)
+    public async Task<IActionResult> Refresh([FromQuery] string refreshToken, CancellationToken ct)
     {
         var result = await authService.RefreshAsync(refreshToken, ct);
 
@@ -55,14 +55,14 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout(string refreshToken, CancellationToken ct)
+    public async Task<IActionResult> Logout([FromQuery] string refreshToken, CancellationToken ct)
     {
         await authService.LogoutAsync(refreshToken, ct);
 
         return serializer.ToActionResult(null);
     }
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword(string email, CancellationToken ct)
+    public async Task<IActionResult> ForgotPassword([FromQuery] string email, CancellationToken ct)
     {
         var result = await authService.RequestPasswordResetAsync(email, ct);
 
@@ -73,7 +73,7 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request, CancellationToken ct)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request, CancellationToken ct)
     {
         var result = await authService.ResetPasswordAsync(
             request.Email,
