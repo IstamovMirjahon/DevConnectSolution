@@ -36,7 +36,8 @@ public class AuthService(
             FullName = request.FullName,
             Email = request.Email.ToLower(),
             PasswordHash = passwordHash,
-            Role = request.Role
+            Role = request.Role,
+            TgUsername = request.TgUsername
         };
 
         _memoryCache.Set(
@@ -187,7 +188,8 @@ public class AuthService(
             pendingUser.FullName,
             pendingUser.Email,
             pendingUser.PasswordHash,
-            pendingUser.Role
+            pendingUser.Role,
+            pendingUser.TgUsername
         );
 
         await userRepository.AddAsync(user, ct);

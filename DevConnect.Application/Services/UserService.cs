@@ -1,5 +1,6 @@
 using DevConnect.Application.Interfaces;
 using DevConnect.Application.Models.Users;
+using DevConnect.Domain.Enums;
 using DevConnect.Domain.Helpers;
 using DevConnect.Domain.IRepositories;
 
@@ -52,4 +53,21 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 
         return Result.Success();
     }
+
+    public async Task<Result> UpdateUserTypeAsync(Guid targetUserId, UserType newType, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(targetUserId, ct);
+        if (user is null)
+            return Result.Fail(new NotFoundError(ErrorCodes.UserNotFound, ErrorMessages.UserNotFound));
+
+        if (user.Type == newType)
+            return Result.Fail(new UserError(ErrorCodes.InvalidUserType, ErrorMessages.UserAlreadyHasType));
+
+        user.SetUserType(newType);
+        userRepository.Update(user);
+        await unitOfWork.SaveChangesAsync(ct);
+
+        return Result.Success();
+    }
 }
+

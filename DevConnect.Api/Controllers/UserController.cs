@@ -2,6 +2,7 @@ using System.Security.Claims;
 using DevConnect.Application.Interfaces;
 using DevConnect.Application.Models.Users;
 using DevConnect.Application.ResponseSerializer;
+using DevConnect.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace DevConnect.Api.Controllers.Users;
 
 [ApiController]
 [Route("api/users")]
+[Authorize]
 public class UserController(IUserService userService, DevConnectResponseSerializer serializer) : ControllerBase
 {
     [HttpGet("me")]
@@ -21,6 +23,7 @@ public class UserController(IUserService userService, DevConnectResponseSerializ
         var result = await userService.GetCurrentProfileAsync(userId, ct);
         return serializer.ToActionResult(result);
     }
+
     [HttpPut("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordRequest request, CancellationToken ct)
     {
@@ -29,6 +32,16 @@ public class UserController(IUserService userService, DevConnectResponseSerializ
             return Unauthorized(new { message = "User is not authorized." });
 
         var result = await userService.ChangePasswordAsync(userId, request, ct);
+        return serializer.ToActionResult(result);
+    }
+    [HttpPatch("{id:guid}/type")]
+    //[Authorize(Roles = "LogCheckerCompany,LogCheckerDeveloper,Admin,SystemAdmin")]
+    public async Task<IActionResult> UpdateUserType(
+        [FromRoute] Guid id,
+        [FromQuery] UserType type,
+        CancellationToken ct)
+    {
+        var result = await userService.UpdateUserTypeAsync(id, type, ct);
         return serializer.ToActionResult(result);
     }
 }

@@ -32,6 +32,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.PortfolioUrl)
             .HasMaxLength(500);
 
+        builder.Property(x => x.PhoneNumber)
+            .HasMaxLength(20);
+
+        builder.Property(x => x.TgUsername)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.HasIndex(x => x.TgUsername)
+            .IsUnique();
+
         // Enum → int
         builder.Property(x => x.Role)
             .HasConversion<int>()

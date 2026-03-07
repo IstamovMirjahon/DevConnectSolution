@@ -12,6 +12,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRecruiterService, RecruiterService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ILogCheckerCompanyService, LogCheckerCompanyService>();
+        services.AddScoped<ILogCheckerDeveloperService, LogCheckerDeveloperService>();
         return services;
     }
 }

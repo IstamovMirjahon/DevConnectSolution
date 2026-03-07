@@ -14,4 +14,6 @@ public static class ErrorCodes
     public const string RecruiterNotFound = "RECRUITER_NOT_FOUND";
     public const string InvalidEmailFormat = "INVALID_EMAIL_FORMAT";
     public const string RefreshTokenExpired = "REFRESH_TOKEN_EXPIRED";
+    public const string InvalidUserType = "INVALID_USER_TYPE";
+    public const string UserTypeUpdateForbidden = "USER_TYPE_UPDATE_FORBIDDEN";
 }

@@ -6,5 +6,6 @@ public record RegisterRequest(
     string FullName,
     string Email,
     string Password,
-    Role Role
+    Role Role,
+    string TgUsername
 );

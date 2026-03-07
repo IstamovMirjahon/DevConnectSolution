@@ -1,5 +1,6 @@
 ﻿using DevConnect.Application.Interfaces;
 using DevConnect.Application.Interfaces.Auth;
+using DevConnect.Application.Services;
 using DevConnect.Domain.IRepositories;
 using DevConnect.Infrastructure.Context;
 using DevConnect.Infrastructure.Repositories;
@@ -20,6 +21,7 @@ public static class Services
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IRecruiterRepository, RecruiterRepository>();
+        services.AddScoped<IInterviewRepository, InterviewRepository>();
         
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -14,6 +14,10 @@ public class User : BaseEntity
 
     public string? PortfolioUrl { get; set; }
 
+    public string? PhoneNumber { get; set; }
+
+    public string TgUsername { get; set; } = string.Empty;
+
     public Role Role { get; set; }
 
     public Profession? Profession { get; set; }
@@ -28,12 +32,14 @@ public class User : BaseEntity
         string fullName,
         string email,
         string passwordHash,
-        Role role)
+        Role role,
+        string tgUsername)
     {
         FullName = fullName;
         Email = email.ToLower();
         PasswordHash = passwordHash;
         Role = role;
+        TgUsername = tgUsername;
         State = State.Active;
         Type = UserType.Unconfirmed;
     }
@@ -47,6 +53,12 @@ public class User : BaseEntity
     public void ChangePassword(string newHash)
     {
         PasswordHash = newHash;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SetUserType(UserType newType)
+    {
+        Type = newType;
         UpdatedAt = DateTime.UtcNow;
     }
 }

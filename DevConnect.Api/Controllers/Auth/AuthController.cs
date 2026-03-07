@@ -19,10 +19,10 @@ public class AuthController(IAuthService authService, DevConnectResponseSerializ
         return serializer.ToActionResult(result);
     }
     [HttpPost("verify-register")]
-    public async Task<IActionResult> VerifyRegister(string email, string code, CancellationToken ct)
+    public async Task<IActionResult> VerifyRegister([FromBody] VerifyRegisterRequest request, CancellationToken ct)
     {
         var result = await authService
-            .VerifyRegisterAsync(email, code, ct);
+            .VerifyRegisterAsync(request.Email, request.Code, ct);
 
         return serializer.ToActionResult(result);
     }

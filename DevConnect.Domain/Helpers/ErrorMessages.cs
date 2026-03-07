@@ -15,4 +15,8 @@ public static class ErrorMessages
     public const string IncorrectCurrentPassword = "Incorrect current password.";
     public const string InvalidEmailFormat = "Invalid email format.";
     public const string RefreshTokenExpired = "Refresh token expired.";
+    public const string InvalidUserType = "Invalid user type value.";
+    public const string UserTypeUpdateForbidden = "You do not have permission to update user type.";
+    public const string UserAlreadyHasType = "User already has this type.";
+    public const string LogCheckerUsersNotFound = "No users found for the specified criteria.";
 }
