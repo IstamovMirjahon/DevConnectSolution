@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20260313052201_UpdateBeforeDeployment")]
+    [Migration("20260313052858_UpdateBeforeDeployment")]
     partial class UpdateBeforeDeployment
     {
         /// <inheritdoc />
