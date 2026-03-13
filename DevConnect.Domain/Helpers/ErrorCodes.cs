@@ -16,4 +16,6 @@ public static class ErrorCodes
     public const string RefreshTokenExpired = "REFRESH_TOKEN_EXPIRED";
     public const string InvalidUserType = "INVALID_USER_TYPE";
     public const string UserTypeUpdateForbidden = "USER_TYPE_UPDATE_FORBIDDEN";
+    public const string InvalidCvFile            = "INVALID_CV_FILE";
+    public const string AiAnalysisFailed         = "AI_ANALYSIS_FAILED";
 }

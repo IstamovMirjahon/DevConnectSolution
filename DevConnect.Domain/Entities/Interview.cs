@@ -14,6 +14,8 @@ public class Interview : BaseEntity
     public InterviewStatus Status { get; set; } = InterviewStatus.Pending;
     public string? Notes { get; set; }
     public string? MeetingLink { get; set; }
+    public byte? Score { get; private set; }
+    public string? ResultNote { get; private set; }
     public virtual User? User { get; set; }
     public virtual User? LogChecker { get; set; }
 
@@ -47,9 +49,11 @@ public class Interview : BaseEntity
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public void Complete()
+    public void Complete(byte? score = null, string? resultNote = null)
     {
         Status = InterviewStatus.Completed;
+        Score = score;
+        ResultNote = resultNote;
         UpdatedAt = DateTime.UtcNow;
     }
 

@@ -11,4 +11,5 @@ public class LoginResponse
     public string Email { get; set; } = string.Empty;
     public Role Role { get; set; }
     public UserType UserType { get; set; }
+    public Profession? Profession { get; set; }
 }

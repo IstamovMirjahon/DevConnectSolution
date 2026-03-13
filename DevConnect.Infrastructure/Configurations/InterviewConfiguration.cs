@@ -30,6 +30,11 @@ public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
             .HasConversion<int>()
             .IsRequired();
 
+        builder.Property(x => x.Score);
+
+        builder.Property(x => x.ResultNote)
+            .HasMaxLength(2000);
+
         // FK: UserId → Users (suhbatga chaqirilgan user)
         builder.HasOne(x => x.User)
             .WithMany()

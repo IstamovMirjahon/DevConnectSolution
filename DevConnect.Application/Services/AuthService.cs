@@ -97,7 +97,8 @@ public class AuthService(
             FullName = user.FullName,
             Email = user.Email,
             Role = user.Role,
-            UserType = user.Type
+            UserType = user.Type,
+            Profession = user.Profession
         };
         return Result.Success(response);
     }

@@ -1,27 +1,39 @@
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using DevConnect.Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DevConnect.Application.Prompts;
 
 /// <summary>
-/// GPT-4o tomonidan qaytarilgan JSON ma'lumotni ushlab qoluvchi Model/Class.
-/// O'zingiz qanday ustunlar yaratgan bo'lsangiz, shularga moslashingiz mumkin.
+/// GPT-4o tomonidan qaytarilgan JSON ma'lumotni ushlab qoluvchi Model.
 /// </summary>
 public class ProfileAnalysisResponse
 {
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public List<string> Skills { get; set; } = new();
+    public List<string> Skills { get; set; } = [];
     public string ExperienceLevel { get; set; } = string.Empty;
-    public List<string> SuitableVacancies { get; set; } = new();
+    public List<string> SuitableVacancies { get; set; } = [];
+
+    [JsonPropertyName("portfolioUrl")]
+    public string? PortfolioUrl { get; set; }
 }
 
 /// <summary>
-/// OpenAI Prompti va javobni ushlab oluvchi sodda xizmat (Service).
-/// Buni o'zingizning asosiy Service ichida bemalol ishlata olasiz.
+/// OpenAI Chat Completions API orqali CV matnini tahlil qiladi.
+/// ICvAnalyzerService ni implement qiladi.
 /// </summary>
-public class OpenAiProfileAnalyzerService
+public class OpenAiProfileAnalyzerService(HttpClient httpClient, IConfiguration configuration)
+    : ICvAnalyzerService
 {
-    // 1. GPT-4o uchun maxsus yozilgan tizimli yo'riqnoma (System Prompt).
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public const string SystemPrompt = @"
 You are an expert IT Recruiter and Career Analyst AI.
 Your task is to deeply analyze unstructured input (text, resume pieces, answers) provided by a job seeker and extract structured professional data.
@@ -32,10 +44,11 @@ Based on the candidate's input, deeply analyze and extract the following:
 3. Skills: A list of specific technologies, tools, and soft skills they possess.
 4. ExperienceLevel: Determine their level based on context (Intern, Junior, Middle, Senior, Lead).
 5. SuitableVacancies: An array of 3-5 specific matching job vacancy titles that would perfectly match this candidate.
+6. PortfolioUrl: If there is a personal website, GitHub, LinkedIn, or portfolio URL mentioned anywhere in the CV text, extract it here. Otherwise return null.
 
-CRITICAL INSTRUCTION: 
-Respond ONLY with a raw JSON object exactly matching the structure below. 
-Do NOT include any markdown code blocks (like ```json), no greetings, no explanations. 
+CRITICAL INSTRUCTION:
+Respond ONLY with a raw JSON object exactly matching the structure below.
+Do NOT include any markdown code blocks (like ```json), no greetings, no explanations.
 Only output valid JSON.
 
 {
@@ -43,29 +56,65 @@ Only output valid JSON.
     ""description"": ""string"",
     ""skills"": [""string""],
     ""experienceLevel"": ""string"",
-    ""suitableVacancies"": [""string""]
+    ""suitableVacancies"": [""string""],
+    ""portfolioUrl"": ""string or null""
 }";
 
-    // 2. Ushbu metod OpenAI dan qaytgan string ko'rinishidagi JSON'ni bizning C# class'imizga aylantirib beradi.
-    // Siz mana shu yerdan qaytgan result.Title, result.Description larni bemalol bazangizga saqlaysiz.
+    public async Task<ProfileAnalysisResponse?> AnalyzeCvAsync(string cvText, CancellationToken ct = default)
+    {
+        var apiKey = configuration["OpenAI:ApiKey"]
+            ?? throw new InvalidOperationException("OpenAI:ApiKey is not configured.");
+        var model = configuration["OpenAI:Model"] ?? "gpt-4o";
+
+        httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", apiKey);
+
+        var requestBody = new
+        {
+            model,
+            messages = new[]
+            {
+                new { role = "system", content = SystemPrompt },
+                new { role = "user",   content = cvText }
+            },
+            temperature = 0.3
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await httpClient.PostAsync(
+            "https://api.openai.com/v1/chat/completions", content, ct);
+
+        response.EnsureSuccessStatusCode();
+
+        var responseJson = await response.Content.ReadAsStringAsync(ct);
+        using var doc = JsonDocument.Parse(responseJson);
+
+        var gptText = doc.RootElement
+            .GetProperty("choices")[0]
+            .GetProperty("message")
+            .GetProperty("content")
+            .GetString();
+
+        if (string.IsNullOrWhiteSpace(gptText))
+            return null;
+
+        return JsonSerializer.Deserialize<ProfileAnalysisResponse>(gptText, JsonOptions);
+    }
+
+    /// <summary>
+    /// Parse helper (eski kod bilan moslik uchun qoldirildi).
+    /// </summary>
     public ProfileAnalysisResponse? ParseResponse(string gptJsonResponse)
     {
         try
         {
-            var options = new JsonSerializerOptions 
-            { 
-                PropertyNameCaseInsensitive = true // JSON dagi title bilan C# dagi Title ni bir-biriga tushishini ta'minlaydi
-            };
-            
-            var result = JsonSerializer.Deserialize<ProfileAnalysisResponse>(gptJsonResponse, options);
-            
-            // Qaytgan 'result' ni Endi database ga Entities.User yoki shunga o'xshash jadvalingizga map qilib saqlaysiz
-            return result;
+            return JsonSerializer.Deserialize<ProfileAnalysisResponse>(gptJsonResponse, JsonOptions);
         }
         catch (Exception ex)
         {
-            // Xatolik bo'lsa konsolga yoki Loglarga yozishingiz mumkin.
-            Console.WriteLine($""GPT dan qaytgan ma'lumotni o'qishda xatolik: {ex.Message}"");
+            Console.WriteLine($"GPT dan qaytgan ma'lumotni o'qishda xatolik: {ex.Message}");
             return null;
         }
     }

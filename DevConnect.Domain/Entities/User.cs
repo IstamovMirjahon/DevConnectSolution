@@ -14,6 +14,16 @@ public class User : BaseEntity
 
     public string? PortfolioUrl { get; set; }
 
+    public string? CvUrl { get; set; }
+
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public List<string> Skills { get; set; } = [];
+
+    public string? ExperienceLevel { get; set; }
+
     public string? PhoneNumber { get; set; }
 
     public string TgUsername { get; set; } = string.Empty;
@@ -59,6 +69,24 @@ public class User : BaseEntity
     public void SetUserType(UserType newType)
     {
         Type = newType;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateCvProfile(
+        string cvUrl,
+        string title,
+        string description,
+        List<string> skills,
+        string experienceLevel,
+        string? portfolioUrl)
+    {
+        CvUrl = cvUrl;
+        Title = title;
+        Description = description;
+        Skills = skills;
+        ExperienceLevel = experienceLevel;
+        if (!string.IsNullOrWhiteSpace(portfolioUrl))
+            PortfolioUrl = portfolioUrl;
         UpdatedAt = DateTime.UtcNow;
     }
 }

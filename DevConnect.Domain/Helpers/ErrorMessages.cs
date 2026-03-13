@@ -19,4 +19,6 @@ public static class ErrorMessages
     public const string UserTypeUpdateForbidden = "You do not have permission to update user type.";
     public const string UserAlreadyHasType = "User already has this type.";
     public const string LogCheckerUsersNotFound = "No users found for the specified criteria.";
+    public const string InvalidCvFile           = "Only PDF files are supported.";
+    public const string AiAnalysisFailed        = "Failed to analyze CV with AI. Please try again.";
 }

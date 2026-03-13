@@ -34,6 +34,7 @@ builder.Services.Configure<EmailSettings>(
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<DevConnectResponseSerializer>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+builder.Services.AddHttpClient();
 
 builder.Services.Configure<FormOptions>(options =>
 {

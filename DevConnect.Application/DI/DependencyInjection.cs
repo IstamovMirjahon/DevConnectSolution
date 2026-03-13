@@ -1,5 +1,6 @@
 ﻿using DevConnect.Application.Interfaces;
 using DevConnect.Application.Interfaces.Auth;
+using DevConnect.Application.Prompts;
 using DevConnect.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,9 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ILogCheckerCompanyService, LogCheckerCompanyService>();
         services.AddScoped<ILogCheckerDeveloperService, LogCheckerDeveloperService>();
+        services.AddScoped<IUserNotificationService, UserNotificationService>();
+        services.AddHttpClient<ICvAnalyzerService, OpenAiProfileAnalyzerService>();
+
         return services;
     }
 }

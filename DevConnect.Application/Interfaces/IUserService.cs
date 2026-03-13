@@ -11,4 +11,5 @@ public interface IUserService
     Task<Result> ChangePasswordAsync(Guid userId, UpdatePasswordRequest request, CancellationToken ct = default);
     Task<Result> UpdateUserTypeAsync(Guid targetUserId, UserType newType, CancellationToken ct = default);
     Task<Result<UploadAvatarResponse>> UploadAvatarAsync(Guid userId, IFormFile file, CancellationToken ct = default);
+    Task<Result<UploadCvResponse>> UploadCvAsync(Guid userId, IFormFile file, CancellationToken ct = default);
 }
